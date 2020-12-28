@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.jt.mapper.OrderMapper">
+ 
+	 <select id="QueryDataOrder" resultMap="orderMapper">
+	 	select * from tb_order where order_id=#{id}
+	 </select>
+	 
+	 	<!-- 
+		数据封装
+		1.主键信息映射 必须添加
+		2.开启自动映射
+			autoMapping="true"
+			如果能保证字段和属性的名称一致可以自动映射（包含驼峰规则）
+	 -->
+	 <resultMap type="Order" id="orderMapper" autoMapping="true">
+	 	<id column="order_id" property="orderId"/>
+	 	
+	 	<!-- 一对一封装 -->
+	 	<association property="orderShipping" column="order_id" javaType="OrderShipping" select="queryOrderShippingData"></association>
+	
+		<!-- 一对多的封装 -->
+		<collection property="orderItems" javaType="list" ofType="OrderItem" column="order_id" select="queryOrderItemData"></collection>
+	 </resultMap>
+	 
+	 <!-- 一对一封装 -->
+	 <select id="queryOrderShippingData" resultType="OrderShipping">
+	 	select * from tb_order_shipping where order_id=#{id}
+	 </select>
+	 
+	 <!-- 一对多的封装 -->
+	 <select id="queryOrderItemData" resultType="OrderItem">
+	 	select * from tb_order_item where order_id=#{id}
+	 </select>
+ </mapper>

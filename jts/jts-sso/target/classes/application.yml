@@ -1,0 +1,43 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+        #引入druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/jtdb?serverTimezone=GMT%2B8&characterEncoding=utf8
+    username: root
+    password: root123
+
+  mvc:         #引入mvn配置
+    view:
+      prefix: /WEB-INF/views/     # /默认代表根目录 src/main/webapp
+      suffix: .jsp
+
+#mybatis-plus
+mybatis-plus:
+  type-aliases-package: com.jt.pojo
+  mapper-locations: classpath:/mappers/*.xml
+  #开启驼峰映射
+  configuration:
+    map-underscore-to-camel-case: true
+
+#引入日志
+logging:
+  level:
+    com.jt.mapper: debug
+    
+#dubbo
+dubbo:
+  scan:
+    basePackages: com.jt
+  application:
+    name: provider-user
+  registry: #registry 注册，登记
+    address: zookeeper://192.168.249.3:2181?backup=192.168.249.3:2182,192.168.249.3:2183
+  protocol:
+    name: dubbo
+    port: 20880
